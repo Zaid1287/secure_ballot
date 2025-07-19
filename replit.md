@@ -34,10 +34,11 @@ Preferred communication style: Simple, everyday language.
 ## Key Components
 
 ### Authentication System
-- **Strategy**: Mock Google OAuth implementation
-- **Storage**: Local storage for client-side user state
+- **Strategy**: Microsoft Azure AD with MSAL (Microsoft Authentication Library)
+- **Security**: Enterprise-grade authentication with multi-factor support
+- **Storage**: Secure token management via MSAL with session storage
 - **Authorization**: Role-based access (admin/voter)
-- **Session**: Server-side session management
+- **Privacy**: Zero-knowledge architecture - credentials never stored on server
 
 ### Voting Mechanism
 - **Technology**: Linkable Ring Signatures for anonymity
@@ -88,6 +89,11 @@ Preferred communication style: Simple, everyday language.
 - **@radix-ui/***: Accessible UI primitives
 - **express**: Web server framework
 - **zod**: Runtime type validation
+
+### Security Dependencies
+- **@azure/msal-browser**: Microsoft Authentication Library for browser
+- **@azure/msal-react**: React integration for MSAL authentication
+- **Microsoft Azure AD**: Enterprise identity platform for secure authentication
 
 ### Development Tools
 - **vite**: Build tool and development server

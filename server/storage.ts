@@ -8,7 +8,7 @@ export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  getUserByGoogleId(googleId: string): Promise<User | undefined>;
+  getUserByMicrosoftId(microsoftId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 
   // Election operations
@@ -69,7 +69,7 @@ export class MemStorage implements IStorage {
       id: this.currentUserId++,
       email: "admin@securevote.com",
       name: "Admin User",
-      googleId: null,
+      microsoftId: null,
       isAdmin: true,
       createdAt: new Date(),
     };
@@ -142,14 +142,17 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find(user => user.email === email);
   }
 
-  async getUserByGoogleId(googleId: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.googleId === googleId);
+  async getUserByMicrosoftId(microsoftId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.microsoftId === microsoftId);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const user: User = {
-      ...insertUser,
       id: this.currentUserId++,
+      name: insertUser.name,
+      email: insertUser.email,
+      microsoftId: insertUser.microsoftId || null,
+      isAdmin: insertUser.isAdmin || false,
       createdAt: new Date(),
     };
     this.users.set(user.id, user);
@@ -166,8 +169,12 @@ export class MemStorage implements IStorage {
 
   async createElection(insertElection: InsertElection): Promise<Election> {
     const election: Election = {
-      ...insertElection,
       id: this.currentElectionId++,
+      title: insertElection.title,
+      description: insertElection.description || null,
+      registrationOpen: insertElection.registrationOpen || true,
+      votingOpen: insertElection.votingOpen || false,
+      resultsVisible: insertElection.resultsVisible || false,
       createdAt: new Date(),
     };
     this.elections.set(election.id, election);
@@ -189,8 +196,12 @@ export class MemStorage implements IStorage {
 
   async createCandidate(insertCandidate: InsertCandidate): Promise<Candidate> {
     const candidate: Candidate = {
-      ...insertCandidate,
       id: this.currentCandidateId++,
+      name: insertCandidate.name,
+      electionId: insertCandidate.electionId || null,
+      party: insertCandidate.party || null,
+      platform: insertCandidate.platform || null,
+      imageUrl: insertCandidate.imageUrl || null,
     };
     this.candidates.set(candidate.id, candidate);
     return candidate;
@@ -202,8 +213,11 @@ export class MemStorage implements IStorage {
 
   async createVote(insertVote: InsertVote): Promise<Vote> {
     const vote: Vote = {
-      ...insertVote,
       id: this.currentVoteId++,
+      electionId: insertVote.electionId || null,
+      candidateId: insertVote.candidateId || null,
+      ringSignatureHash: insertVote.ringSignatureHash,
+      ringSize: insertVote.ringSize,
       timestamp: new Date(),
     };
     this.votes.set(vote.id, vote);
@@ -216,7 +230,9 @@ export class MemStorage implements IStorage {
     
     const counts = new Map<number, number>();
     votes.forEach(vote => {
-      counts.set(vote.candidateId, (counts.get(vote.candidateId) || 0) + 1);
+      if (vote.candidateId) {
+        counts.set(vote.candidateId, (counts.get(vote.candidateId) || 0) + 1);
+      }
     });
 
     return candidates.map(candidate => ({
@@ -238,15 +254,20 @@ export class MemStorage implements IStorage {
     );
     
     return registrations.map(registration => {
-      const user = this.users.get(registration.userId!);
+      const userId = registration.userId;
+      if (!userId) return { ...registration, user: { id: 0, name: 'Unknown', email: 'unknown', microsoftId: null, isAdmin: false, createdAt: new Date() } };
+      const user = this.users.get(userId);
       return { ...registration, user: user! };
     });
   }
 
   async createVoterRegistration(insertRegistration: InsertVoterRegistration): Promise<VoterRegistration> {
     const registration: VoterRegistration = {
-      ...insertRegistration,
       id: this.currentRegistrationId++,
+      electionId: insertRegistration.electionId || null,
+      userId: insertRegistration.userId || null,
+      ringPosition: insertRegistration.ringPosition || null,
+      verified: insertRegistration.verified || false,
       registeredAt: new Date(),
     };
     this.voterRegistrations.set(registration.id, registration);

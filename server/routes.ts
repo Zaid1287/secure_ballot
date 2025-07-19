@@ -52,26 +52,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Mock authentication endpoint
-  app.post("/api/auth/google", async (req, res) => {
+  // Microsoft authentication endpoint
+  app.post("/api/auth/microsoft", async (req, res) => {
     try {
-      const { token } = req.body;
+      const { microsoftId, email, name } = req.body;
       
-      // Mock Google token validation - in real app, validate with Google
-      const mockUser = {
-        googleId: "mock_google_id_" + Date.now(),
-        email: "user@example.com",
-        name: "John Doe",
-        isAdmin: false,
-      };
+      if (!microsoftId || !email || !name) {
+        return res.status(400).json({ message: "Missing required authentication data" });
+      }
 
-      let user = await storage.getUserByGoogleId(mockUser.googleId);
+      let user = await storage.getUserByMicrosoftId(microsoftId);
       if (!user) {
-        user = await storage.createUser(mockUser);
+        user = await storage.createUser({
+          microsoftId,
+          email,
+          name,
+          isAdmin: false,
+        });
       }
 
       res.json({ user });
     } catch (error) {
+      console.error("Microsoft authentication error:", error);
       res.status(500).json({ message: "Authentication failed" });
     }
   });

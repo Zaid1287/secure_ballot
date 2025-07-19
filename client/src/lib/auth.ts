@@ -1,19 +1,19 @@
+import { AccountInfo } from "@azure/msal-browser";
 import { apiRequest } from "./queryClient";
 
 export interface AuthUser {
   id: number;
   email: string;
   name: string;
-  googleId: string | null;
+  microsoftId: string | null;
   isAdmin: boolean;
 }
 
-export async function authenticateWithGoogle(): Promise<AuthUser> {
-  // Mock Google authentication - in real app, use Google OAuth
-  const mockToken = "mock_google_token_" + Date.now();
-  
-  const response = await apiRequest("POST", "/api/auth/google", {
-    token: mockToken,
+export async function authenticateWithMicrosoft(account: AccountInfo): Promise<AuthUser> {
+  const response = await apiRequest("POST", "/api/auth/microsoft", {
+    microsoftId: account.localAccountId,
+    email: account.username,
+    name: account.name || account.username,
   });
   
   const data = await response.json();
