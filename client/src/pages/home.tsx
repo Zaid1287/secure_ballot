@@ -159,11 +159,6 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
-                alt="Advanced cryptographic security with digital encryption patterns" 
-                className="rounded-2xl shadow-2xl w-full"
-              />
             </div>
           </div>
         </div>
