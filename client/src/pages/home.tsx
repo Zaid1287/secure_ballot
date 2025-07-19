@@ -93,12 +93,7 @@ export default function Home() {
                 )}
                 
 
-                <Button 
-                  variant="outline"
-                  className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-700 transition-all"
-                >
-                  Learn More
-                </Button>
+                
               </div>
             </div>
             
