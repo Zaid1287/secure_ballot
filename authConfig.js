@@ -6,9 +6,12 @@ const authConfig = {
   // Authority URL for authentication
   authority: "https://login.microsoftonline.com/a57f7d92-038e-4d4c-8265-7cd2beb33b34",
   
+  // Object ID
+  objectId: "бcеа08cd-6128-470e-b7ca-e2d95a9af812",
+  
   // Redirect URIs
-  redirectUri: "http://localhost:5000",
-  postLogoutRedirectUri: "http://localhost:5000",
+  redirectUri: window.location.origin,
+  postLogoutRedirectUri: window.location.origin,
   
   // Application scopes
   scopes: [

@@ -42,8 +42,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, accounts]);
 
   const login = async () => {
+    // Prevent multiple login attempts
+    if (isLoading) return;
+    
     setIsLoading(true);
     try {
+      // Check if interaction is already in progress
+      const inProgress = instance.getActiveAccount();
+      if (inProgress) {
+        console.log("Login already in progress");
+        setIsLoading(false);
+        return;
+      }
+      
       await instance.loginPopup(loginRequest);
     } catch (error) {
       console.error("Microsoft login failed:", error);

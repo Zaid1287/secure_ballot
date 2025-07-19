@@ -133,3 +133,15 @@ Preferred communication style: Simple, everyday language.
 - **Environment Variables**: Sensitive data protection
 
 The application is designed to be scalable, secure, and maintainable with clear separation of concerns between frontend and backend systems. The ring signature implementation ensures voter privacy while maintaining election integrity.
+
+## Recent Changes: Latest modifications with dates
+
+### 2025-07-19 - Authentication Configuration Updates
+- Fixed database connection error by switching from postgres to Neon serverless
+- Updated Microsoft Azure AD client ID to: f456d66d-734d-418d-ba98-dd48ea081819
+- Updated tenant ID to: a57f7d92-038e-4d4c-8265-7cd2beb33b34
+- Added object ID: бcеа08cd-6128-470e-b7ca-e2d95a9af812
+- Created authConfig.js file in root directory
+- Updated .env file with proper Azure configuration
+- Improved auth handler to prevent multiple login attempts
+- Removed placeholder images from home page
