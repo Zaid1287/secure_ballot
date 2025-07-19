@@ -47,17 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      // First try silent authentication
-      try {
-        await instance.ssoSilent(loginRequest);
-      } catch (silentError) {
-        // If silent fails, use redirect method
-        console.log("Silent auth failed, trying redirect...");
-        await instance.loginRedirect({
-          ...loginRequest,
-          redirectUri: window.location.origin,
-        });
-      }
+      // Direct popup login (skip silent for now to fix popup blocking)
+      console.log("Starting popup login...");
+      await instance.loginPopup({
+        ...loginRequest,
+        redirectUri: window.location.origin,
+      });
     } catch (error) {
       console.error("Microsoft login failed:", error);
       setIsLoading(false);
@@ -68,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logoutUser(); // Clear JWT and backend session
       setUser(null);
-      await instance.logoutRedirect({
+      await instance.logoutPopup({
         postLogoutRedirectUri: window.location.origin,
       }); // Microsoft logout
     } catch (error) {
