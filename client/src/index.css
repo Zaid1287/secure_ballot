@@ -4,9 +4,9 @@
 
 :root {
   --background: hsl(0, 0%, 100%);
-  --foreground: hsl(20, 14.3%, 4.1%);
+  --foreground: hsl(20, 14.3%, 8%);
   --muted: hsl(60, 4.8%, 95.9%);
-  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --muted-foreground: hsl(25, 5.3%, 25%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(20, 14.3%, 4.1%);
   --card: hsl(0, 0%, 100%);
@@ -31,7 +31,7 @@
   --background: hsl(240, 10%, 3.9%);
   --foreground: hsl(0, 0%, 98%);
   --muted: hsl(240, 3.7%, 15.9%);
-  --muted-foreground: hsl(240, 5%, 64.9%);
+  --muted-foreground: hsl(240, 5%, 75%);
   --popover: hsl(240, 10%, 3.9%);
   --popover-foreground: hsl(0, 0%, 98%);
   --card: hsl(240, 10%, 3.9%);
@@ -73,6 +73,24 @@
   
   .hover\:bg-primary-700:hover {
     background-color: hsl(217, 91%, 50%);
+  }
+  
+  .text-enhanced {
+    color: hsl(223, 39%, 25%);
+    font-weight: 600;
+  }
+  
+  .dark .text-enhanced {
+    color: hsl(210, 40%, 98%);
+  }
+  
+  .text-secondary-enhanced {
+    color: hsl(223, 20%, 35%);
+    font-weight: 500;
+  }
+  
+  .dark .text-secondary-enhanced {
+    color: hsl(210, 40%, 85%);
   }
   
   .bg-teal-600 {

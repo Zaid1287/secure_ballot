@@ -72,7 +72,7 @@ export default function Home() {
                   <span className="block">Anonymous.</span>
                   <span className="block text-teal-300">Decentralized.</span>
                 </h1>
-                <p className="text-xl text-blue-100 max-w-2xl">
+                <p className="text-xl text-blue-50 max-w-2xl font-medium drop-shadow-md">
                   Experience next-gen Linkable Ring Signature(LRS)-based e-voting with complete privacy, fairness, and cryptographic linkability.
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function Home() {
                       <Shield className="h-4 w-4" />
                       <span className="font-semibold">Secured by Microsoft Azure AD</span>
                     </div>
-                    <p className="text-blue-100">
+                    <p className="text-blue-50 font-medium">
                       Enterprise-grade authentication with zero-knowledge architecture. 
                       Your credentials are never stored on our servers.
                     </p>

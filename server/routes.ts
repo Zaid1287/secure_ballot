@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { generateToken, authenticateToken, requireAdmin, type AuthenticatedRequest } from "./auth";
 import { insertVoteSchema, insertVoterRegistrationSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -52,7 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Microsoft authentication endpoint
+  // Microsoft authentication endpoint with JWT
   app.post("/api/auth/microsoft", async (req, res) => {
     try {
       const { microsoftId, email, name } = req.body;
@@ -71,18 +72,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      res.json({ user });
+      // Generate JWT token
+      const token = generateToken(user);
+      
+      // Set secure HTTP-only cookie
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
+      res.json({ user, token });
     } catch (error) {
       console.error("Microsoft authentication error:", error);
       res.status(500).json({ message: "Authentication failed" });
     }
   });
 
-  // Register voter for election
-  app.post("/api/elections/:id/register", async (req, res) => {
+  // Logout endpoint
+  app.post("/api/auth/logout", (req, res) => {
+    res.clearCookie('auth_token');
+    res.json({ message: "Logged out successfully" });
+  });
+
+  // Register voter for election (protected route)
+  app.post("/api/elections/:id/register", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const electionId = parseInt(req.params.id);
-      const { userId } = req.body;
+      const userId = req.user!.id;
 
       const existingRegistration = await storage.getVoterRegistration(userId, electionId);
       if (existingRegistration) {
@@ -105,14 +123,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Submit vote
-  app.post("/api/elections/:id/vote", async (req, res) => {
+  // Submit vote (protected route)
+  app.post("/api/elections/:id/vote", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const electionId = parseInt(req.params.id);
       const voteData = insertVoteSchema.parse({
         ...req.body,
         electionId,
       });
+
+      // Verify user is registered for this election
+      const registration = await storage.getVoterRegistration(req.user!.id, electionId);
+      if (!registration || !registration.verified) {
+        return res.status(403).json({ message: "Not registered or verified for this election" });
+      }
 
       // Mock ring signature generation
       const ringSignatureHash = `0x${Math.random().toString(16).substring(2, 10)}...`;

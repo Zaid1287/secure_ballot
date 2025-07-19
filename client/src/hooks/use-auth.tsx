@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useMsal, useIsAuthenticated } from "@azure/msal-react";
-import { AuthUser, getStoredUser, storeUser, clearStoredUser, authenticateWithMicrosoft } from "@/lib/auth";
+import { AuthUser, getStoredUser, storeUser, storeToken, clearStoredUser, logoutUser, authenticateWithMicrosoft } from "@/lib/auth";
 import { loginRequest } from "@/lib/msalConfig";
 
 interface AuthContextType {
@@ -24,9 +24,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (isAuthenticated && accounts.length > 0 && !storedUser) {
         try {
-          const authUser = await authenticateWithMicrosoft(accounts[0]);
-          setUser(authUser);
-          storeUser(authUser);
+          const { user, token } = await authenticateWithMicrosoft(accounts[0]);
+          setUser(user);
+          storeUser(user);
+          storeToken(token);
         } catch (error) {
           console.error("Microsoft authentication failed:", error);
         }
@@ -50,10 +51,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    clearStoredUser();
-    instance.logoutPopup();
+  const logout = async () => {
+    try {
+      await logoutUser(); // Clear JWT and backend session
+      setUser(null);
+      await instance.logoutPopup(); // Microsoft logout
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Even if requests fail, clear local state
+      setUser(null);
+      clearStoredUser();
+    }
   };
 
   return (

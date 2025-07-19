@@ -36,8 +36,8 @@ export function Navigation() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`text-gray-600 dark:text-gray-300 hover:text-primary-600 transition-colors ${
-                  location === item.path ? "text-primary-600 font-semibold" : ""
+                className={`text-secondary-enhanced dark:text-gray-200 hover:text-primary-600 transition-colors font-medium ${
+                  location === item.path ? "text-primary-600 font-bold" : ""
                 }`}
               >
                 {item.label}
@@ -61,8 +61,8 @@ export function Navigation() {
             
             {user ? (
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600 dark:text-gray-300">{user.name}</span>
-                <Button variant="ghost" onClick={logout}>
+                <span className="text-sm text-enhanced dark:text-gray-100 font-medium">{user.name}</span>
+                <Button variant="ghost" onClick={logout} className="text-enhanced hover:text-primary-600">
                   <User className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>

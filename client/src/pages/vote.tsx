@@ -76,8 +76,8 @@ export default function Vote() {
               <div className="w-20 h-20 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-6">
                 <UserPlus className="text-yellow-600 dark:text-yellow-400 text-3xl" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Registration Required</h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-8">You need to register with Microsoft to participate in the voting process.</p>
+              <h2 className="text-3xl font-bold text-enhanced dark:text-white mb-4">Registration Required</h2>
+              <p className="text-secondary-enhanced dark:text-gray-200 mb-8 font-medium">You need to register with Microsoft to participate in the voting process.</p>
               <Button onClick={login} className="bg-primary-600 hover:bg-primary-700">
                 <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/>
@@ -165,8 +165,8 @@ export default function Vote() {
           <Card>
             <CardHeader>
               <CardTitle className="text-center space-y-4">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{election.title}</h1>
-                <p className="text-lg text-gray-600 dark:text-gray-300">{election.description || "Select your preferred candidate"}</p>
+                <h1 className="text-4xl font-bold text-enhanced dark:text-white">{election.title}</h1>
+                <p className="text-lg text-secondary-enhanced dark:text-gray-200 font-medium">{election.description || "Select your preferred candidate"}</p>
                 <div className="flex justify-center items-center space-x-4 text-sm text-gray-500">
                   <span className="flex items-center">
                     <Clock className="mr-2 h-4 w-4" />
