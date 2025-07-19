@@ -56,6 +56,11 @@ export default function Home() {
       <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-teal-600 text-white py-20 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&h=1000" 
+            alt="Abstract cryptocurrency blockchain network" 
+            className="w-full h-full object-cover"
+          />
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
