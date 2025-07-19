@@ -81,7 +81,7 @@ export default function Home() {
                 {!user ? (
                   <Button 
                     onClick={login}
-                    className="bg-white text-primary-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all transform hover:scale-105 shadow-xl"
+                    className="bg-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all transform hover:scale-105 shadow-xl text-[#2f2f96]"
                   >
                     <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/>
@@ -154,11 +154,11 @@ export default function Home() {
                 Our voting protocol is built with complete transparency, allowing voters to verify their vote inclusion while remaining anonymous.
               </p>
               <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <div className="text-center p-6">
                   <div className="text-3xl font-bold text-teal-300">256-bit</div>
                   <div className="text-sm text-blue-100">Encryption</div>
                 </div>
-                <div className="text-center p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <div className="text-center p-6">
                   <div className="text-3xl font-bold text-teal-300">Zero</div>
                   <div className="text-sm text-blue-100">Server Keys</div>
                 </div>
