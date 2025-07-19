@@ -92,19 +92,7 @@ export default function Home() {
                   <div className="text-xl">Welcome back, {user.name}!</div>
                 )}
                 
-                {/* Microsoft Authentication Info */}
-                {!user && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-sm">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Shield className="h-4 w-4" />
-                      <span className="font-semibold">Secured by Microsoft Azure AD</span>
-                    </div>
-                    <p className="text-blue-50 font-medium">
-                      Enterprise-grade authentication with zero-knowledge architecture. 
-                      Your credentials are never stored on our servers.
-                    </p>
-                  </div>
-                )}
+
                 <Button 
                   variant="outline"
                   className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-700 transition-all"
