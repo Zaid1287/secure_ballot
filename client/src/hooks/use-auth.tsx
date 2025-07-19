@@ -47,8 +47,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      // Use redirect instead of popup for better compatibility
-      await instance.loginRedirect(loginRequest);
+      // Use popup for iframe environments like Replit
+      await instance.loginPopup({
+        ...loginRequest,
+        redirectUri: window.location.origin,
+      });
     } catch (error) {
       console.error("Microsoft login failed:", error);
       setIsLoading(false);
@@ -59,7 +62,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logoutUser(); // Clear JWT and backend session
       setUser(null);
-      await instance.logoutRedirect(); // Microsoft logout
+      await instance.logoutPopup({
+        postLogoutRedirectUri: window.location.origin,
+      }); // Microsoft logout
     } catch (error) {
       console.error("Logout failed:", error);
       // Even if requests fail, clear local state
