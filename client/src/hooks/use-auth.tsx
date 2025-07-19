@@ -47,11 +47,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      // Use popup for iframe environments like Replit
-      await instance.loginPopup({
-        ...loginRequest,
-        redirectUri: window.location.origin,
-      });
+      // First try silent authentication
+      try {
+        await instance.ssoSilent(loginRequest);
+      } catch (silentError) {
+        // If silent fails, use popup with explicit domain
+        console.log("Silent auth failed, trying popup...");
+        await instance.loginPopup({
+          ...loginRequest,
+          redirectUri: "https://20da8c89-c79f-4a4e-b147-beee2419dc45-00-aucpd5qct96z.picard.replit.dev",
+        });
+      }
     } catch (error) {
       console.error("Microsoft login failed:", error);
       setIsLoading(false);
