@@ -47,15 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      // Check if interaction is already in progress
-      const inProgress = instance.getActiveAccount();
-      if (inProgress) {
-        console.log("Login already in progress");
-        setIsLoading(false);
-        return;
-      }
-      
-      await instance.loginPopup(loginRequest);
+      // Use redirect instead of popup for better compatibility
+      await instance.loginRedirect(loginRequest);
     } catch (error) {
       console.error("Microsoft login failed:", error);
       setIsLoading(false);
@@ -66,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logoutUser(); // Clear JWT and backend session
       setUser(null);
-      await instance.logoutPopup(); // Microsoft logout
+      await instance.logoutRedirect(); // Microsoft logout
     } catch (error) {
       console.error("Logout failed:", error);
       // Even if requests fail, clear local state
