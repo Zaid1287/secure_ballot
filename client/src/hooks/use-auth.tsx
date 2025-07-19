@@ -51,9 +51,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         await instance.ssoSilent(loginRequest);
       } catch (silentError) {
-        // If silent fails, use popup with explicit domain
-        console.log("Silent auth failed, trying popup...");
-        await instance.loginPopup({
+        // If silent fails, use redirect method
+        console.log("Silent auth failed, trying redirect...");
+        await instance.loginRedirect({
           ...loginRequest,
           redirectUri: window.location.origin,
         });
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logoutUser(); // Clear JWT and backend session
       setUser(null);
-      await instance.logoutPopup({
+      await instance.logoutRedirect({
         postLogoutRedirectUri: window.location.origin,
       }); // Microsoft logout
     } catch (error) {
