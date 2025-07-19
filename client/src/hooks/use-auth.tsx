@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log("Silent auth failed, trying popup...");
         await instance.loginPopup({
           ...loginRequest,
-          redirectUri: "https://20da8c89-c79f-4a4e-b147-beee2419dc45-00-aucpd5qct96z.picard.replit.dev",
+          redirectUri: window.location.origin,
         });
       }
     } catch (error) {
