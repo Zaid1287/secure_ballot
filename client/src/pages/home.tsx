@@ -108,7 +108,6 @@ export default function Home() {
                 alt="Secure digital voting interface with encryption" 
                 className="rounded-2xl shadow-2xl w-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/50 to-transparent rounded-2xl"></div>
             </div>
           </div>
         </div>
@@ -170,7 +169,6 @@ export default function Home() {
                 alt="Advanced cryptographic security with digital encryption patterns" 
                 className="rounded-2xl shadow-2xl w-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/50 to-transparent rounded-2xl"></div>
             </div>
           </div>
         </div>

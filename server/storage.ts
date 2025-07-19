@@ -3,6 +3,8 @@ import {
   type User, type Election, type Candidate, type Vote, type VoterRegistration,
   type InsertUser, type InsertElection, type InsertCandidate, type InsertVote, type InsertVoterRegistration
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, and } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -284,4 +286,118 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0];
+  }
+
+  async getUserByMicrosoftId(microsoftId: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.microsoftId, microsoftId)).limit(1);
+    return result[0];
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const result = await db.insert(users).values(user).returning();
+    return result[0];
+  }
+
+  async getElections(): Promise<Election[]> {
+    return await db.select().from(elections);
+  }
+
+  async getElection(id: number): Promise<Election | undefined> {
+    const result = await db.select().from(elections).where(eq(elections.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createElection(election: InsertElection): Promise<Election> {
+    const result = await db.insert(elections).values(election).returning();
+    return result[0];
+  }
+
+  async updateElection(id: number, updates: Partial<Election>): Promise<Election | undefined> {
+    const result = await db.update(elections).set(updates).where(eq(elections.id, id)).returning();
+    return result[0];
+  }
+
+  async getCandidatesByElection(electionId: number): Promise<Candidate[]> {
+    return await db.select().from(candidates).where(eq(candidates.electionId, electionId));
+  }
+
+  async createCandidate(candidate: InsertCandidate): Promise<Candidate> {
+    const result = await db.insert(candidates).values(candidate).returning();
+    return result[0];
+  }
+
+  async getVotesByElection(electionId: number): Promise<Vote[]> {
+    return await db.select().from(votes).where(eq(votes.electionId, electionId));
+  }
+
+  async createVote(vote: InsertVote): Promise<Vote> {
+    const result = await db.insert(votes).values(vote).returning();
+    return result[0];
+  }
+
+  async getVoteCountsByCandidate(electionId: number): Promise<{ candidateId: number; count: number; candidate: Candidate }[]> {
+    const result = await db
+      .select({
+        candidateId: votes.candidateId,
+        count: db.$count(votes.candidateId),
+        candidate: candidates
+      })
+      .from(votes)
+      .innerJoin(candidates, eq(votes.candidateId, candidates.id))
+      .where(eq(votes.electionId, electionId))
+      .groupBy(votes.candidateId, candidates.id);
+
+    return result.map(row => ({
+      candidateId: row.candidateId!,
+      count: Number(row.count),
+      candidate: row.candidate
+    }));
+  }
+
+  async getVoterRegistration(userId: number, electionId: number): Promise<VoterRegistration | undefined> {
+    const result = await db
+      .select()
+      .from(voterRegistrations)
+      .where(and(eq(voterRegistrations.userId, userId), eq(voterRegistrations.electionId, electionId)))
+      .limit(1);
+    return result[0];
+  }
+
+  async getVoterRegistrationsByElection(electionId: number): Promise<(VoterRegistration & { user: User })[]> {
+    const result = await db
+      .select({
+        registration: voterRegistrations,
+        user: users
+      })
+      .from(voterRegistrations)
+      .innerJoin(users, eq(voterRegistrations.userId, users.id))
+      .where(eq(voterRegistrations.electionId, electionId));
+
+    return result.map(row => ({
+      ...row.registration,
+      user: row.user
+    }));
+  }
+
+  async createVoterRegistration(registration: InsertVoterRegistration): Promise<VoterRegistration> {
+    const result = await db.insert(voterRegistrations).values(registration).returning();
+    return result[0];
+  }
+
+  async updateVoterRegistration(id: number, updates: Partial<VoterRegistration>): Promise<VoterRegistration | undefined> {
+    const result = await db.update(voterRegistrations).set(updates).where(eq(voterRegistrations.id, id)).returning();
+    return result[0];
+  }
+}
+
+// Use DatabaseStorage instead of MemStorage
+export const storage = new DatabaseStorage();
